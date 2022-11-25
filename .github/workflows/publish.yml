@@ -1,5 +1,4 @@
 on:
-  name: Publish
   push:
     # Pattern matched against refs/tags
     tags:        
