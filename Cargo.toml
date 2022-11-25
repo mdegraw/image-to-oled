@@ -1,10 +1,15 @@
 [package]
 name = "image-to-oled"
 version = "0.1.0"
+authors = ["mdegraw <michael.degraw@protonmail.com>"]
 edition = "2021"
+description = "Converts an ImageBuffer to a 0.96 128x64 SSD1306 OLED byte array"
+keywords = ["SSD1306", "OLED"]
+license = "Apache-2.0"
+repository = "https://github.com/mdegraw/image-to-oled"
 
 [lib]
-namee = "image-to-oled"
+name = "image-to-oled"
 path = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
