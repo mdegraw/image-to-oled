@@ -3,9 +3,20 @@ use image::{ImageBuffer, Rgb};
 pub type Frame = Vec<u8>;
 pub type FrameBuffer = ImageBuffer<Rgb<u8>, Frame>;
 
-/// Converts RGB pixels to a 128x64 SSD1306 OLED byte array
-/// brightness_threshold is used to determine if a pixel is black or white
-/// if the brightness of a pixel is above the given threshold the pixel becomes white, else they are black.
+/// Converts RGB pixels to a 128x64 SSD1306 OLED byte array.
+///
+/// `brightness_threshold` is used to determine if a pixel is black or white.
+///
+/// If the brightness of a pixel is above the given threshold the pixel becomes white, else it becomes black.
+///
+/// Example
+///
+/// ```no_run
+/// use image_to_oled::to_oled_byte_array;
+///
+/// let image_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::from_vec(2, 2, vec![30; 12]).unwrap();
+/// let byte_array = to_oled_byte_array(&image_buffer, 30);
+/// ```
 pub fn to_oled_byte_array(frame_buffer: &FrameBuffer, brightness_threshold: u8) -> Frame {
     let resized_img =
         image::imageops::resize(frame_buffer, 128, 64, image::imageops::FilterType::Nearest);
