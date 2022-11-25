@@ -9,7 +9,7 @@ license = "Apache-2.0"
 repository = "https://github.com/mdegraw/image-to-oled"
 
 [lib]
-name = "ImageToOLED"
+name = "image_to_oled"
 path = "src/lib.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
