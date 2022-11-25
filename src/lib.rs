@@ -16,7 +16,7 @@ pub type FrameBuffer = ImageBuffer<Rgb<u8>, Frame>;
 ///
 /// let image_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
 /// ImageBuffer::from_vec(2, 2, vec![30; 12]).unwrap();
-/// let bytes= to_oled_bytes(&image_buffer, 30);
+/// let bytes = to_oled_bytes(&image_buffer, 30);
 /// ```
 pub fn to_oled_bytes(frame_buffer: &FrameBuffer, brightness_threshold: u8) -> Vec<u8> {
     let resized_img =
