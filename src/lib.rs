@@ -3,8 +3,10 @@ use image::{ImageBuffer, Rgb};
 pub type Frame = Vec<u8>;
 pub type FrameBuffer = ImageBuffer<Rgb<u8>, Frame>;
 
-/// Converts RGB pixels to a 128 x 64 SSD1306 OLED byte array
-pub fn to_oled_byte_array(frame_buffer: &FrameBuffer, threshold: u8) -> Frame {
+/// Converts RGB pixels to a 128x64 SSD1306 OLED byte array
+/// brightness_threshold is used to determine if a pixel is black or white
+/// if the brightness of a pixel is above the given threshold the pixel becomes white, else they are black.
+pub fn to_oled_byte_array(frame_buffer: &FrameBuffer, brightness_threshold: u8) -> Frame {
     let resized_img =
         image::imageops::resize(frame_buffer, 128, 64, image::imageops::FilterType::Nearest);
 
@@ -16,7 +18,7 @@ pub fn to_oled_byte_array(frame_buffer: &FrameBuffer, threshold: u8) -> Frame {
                 // Get the average of the RGB
                 let avg: u8 = rgb.iter().sum::<u8>() / 3;
 
-                if avg > threshold {
+                if avg > brightness_threshold {
                     number += 2_u8.pow(byte_index as u32);
                 }
 
@@ -59,17 +61,17 @@ mod tests {
     }
 
     #[test]
-    fn it_uses_threshold_to_determine_number() {
+    fn it_uses_brightness_threshold_to_determine_number() {
         let frame_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
             ImageBuffer::from_vec(2, 2, vec![30; 12]).unwrap();
-        let avg_below_threshold_results = to_oled_byte_array(&frame_buffer, 30);
+        let black_results = to_oled_byte_array(&frame_buffer, 30);
 
-        assert_eq!(avg_below_threshold_results, vec![0; 1024]);
-        assert_eq!(avg_below_threshold_results.len(), 1024);
+        assert_eq!(black_results, vec![0; 1024]);
+        assert_eq!(black_results.len(), 1024);
 
-        let avg_above_threshold_results = to_oled_byte_array(&frame_buffer, 20);
+        let white_results = to_oled_byte_array(&frame_buffer, 20);
 
-        assert_eq!(avg_above_threshold_results, vec![255; 1024]);
-        assert_eq!(avg_above_threshold_results.len(), 1024);
+        assert_eq!(white_results, vec![255; 1024]);
+        assert_eq!(white_results.len(), 1024);
     }
 }
