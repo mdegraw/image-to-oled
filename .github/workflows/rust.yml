@@ -35,9 +35,3 @@ jobs:
         run: cargo fmt -- --check
       - name: Build
         run: cargo build
-      - name: Run
-        run: cargo run
-        env:
-          USERNAME_FOR_GITHUB: ${{ secrets.USERNAME_FOR_GITHUB }}
-          TOKEN_FOR_GITHUB: ${{ secrets.TOKEN_FOR_GITHUB }}
-          RUST_LOG: warn
