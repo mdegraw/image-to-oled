@@ -3,7 +3,7 @@ use image::{ImageBuffer, Rgb};
 pub type Frame = Vec<u8>;
 pub type FrameBuffer = ImageBuffer<Rgb<u8>, Frame>;
 
-/// Converts RGB pixels to a 128x64 SSD1306 OLED byte array.
+/// Converts RGB pixels to a 128x64 SSD1306 OLED byte vector.
 ///
 /// `brightness_threshold` is used to determine if a pixel is black or white.
 ///
@@ -12,13 +12,13 @@ pub type FrameBuffer = ImageBuffer<Rgb<u8>, Frame>;
 /// Example
 ///
 /// ```no_run
-/// use image_to_oled::to_oled_byte_array;
+/// use image_to_oled::to_oled_bytes;
 ///
 /// let image_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
 /// ImageBuffer::from_vec(2, 2, vec![30; 12]).unwrap();
-/// let byte_array = to_oled_byte_array(&image_buffer, 30);
+/// let bytes = to_oled_bytes(&image_buffer, 30);
 /// ```
-pub fn to_oled_byte_array(frame_buffer: &FrameBuffer, brightness_threshold: u8) -> Frame {
+pub fn to_oled_bytes(frame_buffer: &FrameBuffer, brightness_threshold: u8) -> Vec<u8> {
     let resized_img =
         image::imageops::resize(frame_buffer, 128, 64, image::imageops::FilterType::Nearest);
 
@@ -62,11 +62,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_returns_a_byte_array_of_size_1024_for_any_size_frame_buffer() {
+    fn it_returns_a_byte_vec_of_size_1024_for_any_size_frame_buffer() {
         for i in [1, 4, 8, 16, 200, 400, 1000, 10000] {
             let frame_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
                 ImageBuffer::from_vec(i, i, vec![0; (i * i * 3) as usize]).unwrap();
-            let result = to_oled_byte_array(&frame_buffer, 20);
+            let result = to_oled_bytes(&frame_buffer, 20);
 
             assert_eq!(result.len(), 1024);
         }
@@ -76,12 +76,12 @@ mod tests {
     fn it_uses_brightness_threshold_to_determine_number() {
         let frame_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
             ImageBuffer::from_vec(2, 2, vec![30; 12]).unwrap();
-        let black_results = to_oled_byte_array(&frame_buffer, 30);
+        let black_results = to_oled_bytes(&frame_buffer, 30);
 
         assert_eq!(black_results, vec![0; 1024]);
         assert_eq!(black_results.len(), 1024);
 
-        let white_results = to_oled_byte_array(&frame_buffer, 20);
+        let white_results = to_oled_bytes(&frame_buffer, 20);
 
         assert_eq!(white_results, vec![255; 1024]);
         assert_eq!(white_results.len(), 1024);
