@@ -1,6 +1,6 @@
 [package]
 name = "image-to-oled"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["mdegraw <michael.degraw@protonmail.com>"]
 edition = "2021"
 description = "Converts an ImageBuffer to a 128x64 SSD1306 OLED byte vector"
