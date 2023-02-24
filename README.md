@@ -5,8 +5,8 @@ Converts an [ImageBuffer](https://docs.rs/image/0.23.14/image/struct.ImageBuffer
 ## Example
 ```rust
 let image_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
-    ImageBuffer::from_vec(2, 2, vec![30; 12]).unwrap();
+    ImageBuffer::from_vec(640, 480, vec![155; (1024 * 1024 * 3) as usize]).unwrap();
 // get bytes vec, specifying the brightness threshold 
 // as a number between 0 and 255
-let bytes = to_oled_bytes(&image_buffer, 30);
+let bytes = to_oled_bytes(&image_buffer, 100);
 ```
