@@ -11,7 +11,7 @@ pub type FrameBuffer = ImageBuffer<Rgb<u8>, Frame>;
 ///
 /// Example
 ///
-/// ```no_run
+/// ```ignore
 /// use image_to_oled::to_oled_bytes;
 ///
 /// let image_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
@@ -27,10 +27,10 @@ pub fn to_oled_bytes(frame_buffer: &FrameBuffer, brightness_threshold: u8) -> Ve
         .fold(
             (0, 0, 7_i32, resized_img.len(), Vec::<u8>::new()),
             |(mut number, mut i, mut byte_index, pixels_len, mut oled_frame), rgb| {
-                // Get the average of the RGB
-                let avg: u8 = rgb.iter().sum::<u8>() / 3;
+                // Get the average of the RGB while preventing overflow
+                let avg = rgb.iter().map(|x| *x as u16).sum::<u16>() / 3;
 
-                if avg > brightness_threshold {
+                if avg > brightness_threshold.into() {
                     number += 2_u8.pow(byte_index as u32);
                 }
 
@@ -85,5 +85,15 @@ mod tests {
 
         assert_eq!(white_results, vec![255; 1024]);
         assert_eq!(white_results.len(), 1024);
+    }
+
+    #[test]
+    fn it_does_not_overflow_when_computing_average() {
+        let frame_buffer: ImageBuffer<Rgb<u8>, Vec<u8>> =
+            ImageBuffer::from_vec(640, 480, vec![255; (1024 * 1024 * 3) as usize]).unwrap();
+        let results = to_oled_bytes(&frame_buffer, 30);
+
+        assert_eq!(results, vec![255; 1024]);
+        assert_eq!(results.len(), 1024);
     }
 }
